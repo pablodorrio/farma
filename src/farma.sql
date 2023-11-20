@@ -54,7 +54,7 @@ CREATE TABLE
 CREATE TABLE
     TLF_C(
         CDNI VARCHAR(9) NOT NULL,
-        CTLF INT NOT NULL (
+        CTLF INT NOT NULL CHECK(
             CTLF >= 0
             AND CTLF <= 999999999
         ),
@@ -62,6 +62,28 @@ CREATE TABLE
         FOREIGN KEY (CDNI) REFERENCES CLIENTE(CDNI)
     );
 
+    
+CREATE TABLE
+    SUCURSAL(
+        NUM_SUC INT NOT NULL,
+        DIREC VARCHAR(255),
+        PRIMARY KEY (NUM_SUC),
+    );
+
+
+CREATE TABLE
+    PERSONAL (
+        CODIGO_EMP INT NOT NULL,
+        DNI VARCHAR(9) NOT NULL,
+        NOMBRE VARCHAR(25) NOT NULL,
+        DIR VARCHAR(255) NOT NULL,
+        DNI_SUPERVISOR VARCHAR(9) NOT NULL,
+        NUM_SUC INT NOT NULL,
+        PRIMARY KEY (CODIGO_EMP),
+        FOREIGN KEY (DNI_SUPERVISOR) REFERENCES PERSONAL(DNI),
+        FOREIGN KEY (NUM_SUC) REFERENCES SUCURSAL(NUM_SUC)
+    );
+    
 CREATE TABLE
     CLIENTE_VIP (
         CDNI VARCHAR(9) NOT NULL,
@@ -85,6 +107,16 @@ CREATE TABLE
         FOREIGN KEY (CODIGO_EMP) REFERENCES PERSONAL(CODIGO_EMP)
     );
 
+
+CREATE TABLE
+    ITEM(
+        CODIGO_ITEM INT NOT NULL,
+        PRECIO FLOAT NOT NULL,
+        NOMBRE VARCHAR(25) NOT NULL,
+        STOCK INT NOT NULL,
+        PRIMARY KEY (CODIGO_ITEM)
+    );
+
 CREATE TABLE
     LINEA_VENTA (
         N_SEC INT NOT NULL,
@@ -94,19 +126,6 @@ CREATE TABLE
         PRIMARY KEY (N_SEC, CODIGO_VENTA),
         FOREIGN KEY (CODIGO_VENTA) REFERENCES VENTA(CODIGO_VENTA),
         FOREIGN KEY (COD_ITEM) REFERENCES ITEM(CODIGO_ITEM)
-    );
-
-CREATE TABLE
-    PERSONAL (
-        CODIGO_EMP INT NOT NULL,
-        DNI VARCHAR(9) NOT NULL,
-        NOMBRE VARCHAR(25) NOT NULL,
-        DIR VARCHAR(255) NOT NULL,
-        DNI_SUPERVISOR VARCHAR(9) NOT NULL,
-        NUM_SUC INT NOT NULL,
-        PRIMARY KEY (CODIGO_EMP),
-        FOREIGN KEY (DNI_SUPERVISOR) REFERENCES PERSONAL(DNI),
-        FOREIGN KEY (NUM_SUC) REFERENCES SUCURSAL(NUM_SUC)
     );
 
 CREATE TABLE
@@ -126,13 +145,6 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    SUCURSAL(
-        NUM_SUC INT NOT NULL,
-        DIREC VARCHAR(255),
-        PRIMARY KEY (NUM_SUC),
-    );
-
-CREATE TABLE
     CEO(
         DNI VARCHAR(9) NOT NULL,
         NOMBRE VARCHAR(25),
@@ -149,15 +161,6 @@ CREATE TABLE
         -- Restricción de tamaño 9
         PRIMARY KEY (DNI, TLF),
         FOREIGN KEY (DNI) REFERENCES CEO(DNI)
-    );
-
-CREATE TABLE
-    ITEM(
-        CODIGO_ITEM INT NOT NULL,
-        PRECIO FLOAT NOT NULL,
-        NOMBRE VARCHAR(25) NOT NULL,
-        STOCK INT NOT NULL,
-        PRIMARY KEY (CODIGO_ITEM)
     );
 
 CREATE TABLE
@@ -216,8 +219,9 @@ CREATE TABLE
 
 /* __________________VISTAS_____________________ */
 
-/*Vista no actualizable-> item-> muestra los productos en stock, no es necesario que se actualice 
- ya que entrarán pocos productos nuevos a la farma una vez estabilizado el flujo de personal*/
+/*Vista actualizable -> cliente -> muestra y añade nuevos clientes, es necesario que se actualice 
+ ya que cada vez que venga un nuevo cliente este se debe añadir a la base de datos y a veces habrá 
+ que modificar datos de clientes habituales.*/
 
 CREATE VIEW VistaCliente AS
 SELECT
@@ -228,9 +232,8 @@ SELECT
     TLF
 FROM CLIENTE;
 
-/*Vista actualizable -> cliente -> muestra y añade nuevos clientes, es necesario que se actualice 
- ya que cada vez que venga un nuevo cliente este se debe añadir a la base de datos y a veces habrá 
- que modificar datos de clientes habituales.*/
+/*Vista no actualizable-> item-> muestra los productos en stock, no es necesario que se actualice 
+ ya que entrarán pocos productos nuevos a la farma una vez estabilizado el flujo de personal*/
 
 CREATE VIEW
     VistaItemDetallada AS
