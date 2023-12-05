@@ -716,36 +716,97 @@ END MostrarContenidoVenta;
 SET SERVEROUTPUT ON
 
 DECLARE
-    v_cliente_id INT := 123;  -- Asigna un valor adecuado para CalcularTotalVentasCliente
-    v_num_sucursal SUCURSAL.NUM_SUC%TYPE := 1;  -- Asigna un valor adecuado para ListaPersonal
-    v_codigo_item INT := 456;  -- Asigna un valor adecuado para OBTENER_STOCK y ACTUALIZAR_STOCK
-    v_cantidad INT := 10;  -- Asigna un valor adecuado para ACTUALIZAR_STOCK
-    v_codigo_proveedor PROVEEDOR.CODIGO_EMP%TYPE := 789;  -- Asigna un valor adecuado para BorrarProveedor
-    v_codigo_venta LINEA_VENTA.CODIGO_VENTA%TYPE := 987;  -- Asigna un valor adecuado para MostrarItemsLineaVenta
-    v_num_personal NUMBER;
-
+   totalVentas DECIMAL(10, 2);
+   numPersonalSucursal NUMBER;
+   stockProducto NUMBER;
 BEGIN
-    -- 1. Calcular las ventas totales de un Cliente.
-    DBMS_OUTPUT.PUT_LINE('Total de ventas del cliente ' || v_cliente_id || ': ' || CalcularTotalVentasCliente(v_cliente_id));
+   DBMS_OUTPUT.NEW_LINE;
 
-    -- 2. Mostrar el personal de una sucursal.
-    ListaPersonal(v_num_sucursal, v_num_personal);
-    DBMS_OUTPUT.PUT_LINE('Número de personal en la sucursal ' || v_num_sucursal || ': ' || v_num_personal);
+   BEGIN
+      -- 1. Calcular las ventas totales de un Cliente.
+      DBMS_OUTPUT.PUT_LINE('======>INICIO FUNCIÓN: CalcularTotalVentasCliente');
+      totalVentas := CalcularTotalVentasCliente(1); -- Supongamos que el cliente_id es 1
+      DBMS_OUTPUT.PUT_LINE('Ventas totales del Cliente: ' || totalVentas);
+      DBMS_OUTPUT.PUT_LINE('======>FIN FUNCIÓN: CalcularTotalVentasCliente');
+      DBMS_OUTPUT.NEW_LINE;
+   EXCEPTION
+      WHEN OTHERS THEN
+         DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+         DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+         DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SQLERRM);
+   END;
 
-    -- 3. Función para obtener el stock de un producto
-    DBMS_OUTPUT.PUT_LINE('Stock del producto ' || v_codigo_item || ': ' || OBTENER_STOCK(v_codigo_item));
+   BEGIN
+      -- 2. Mostrar el personal de una sucursal.
+      DBMS_OUTPUT.PUT_LINE('======>INICIO PROCEDIMIENTO: ListaPersonal');
+      ListaPersonal(1, numPersonalSucursal); -- Supongamos que el numSucursal es 1
+      DBMS_OUTPUT.PUT_LINE('Número de personal en la sucursal: ' || numPersonalSucursal);
+      DBMS_OUTPUT.PUT_LINE('======>FIN PROCEDIMIENTO: ListaPersonal');
+      DBMS_OUTPUT.NEW_LINE;
+   EXCEPTION
+      WHEN OTHERS THEN
+         DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+         DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+         DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SQLERRM);
+   END;
 
-    -- 4. Procedimiento para actualizar el stock de un producto
-    ACTUALIZAR_STOCK(v_codigo_item, v_cantidad);
+   BEGIN
+      -- 3. Función para obtener el stock de un producto.
+      DBMS_OUTPUT.PUT_LINE('======>INICIO FUNCIÓN: OBTENER_STOCK');
+      stockProducto := OBTENER_STOCK(1); -- Supongamos que el p_codigo_item es 1
+      DBMS_OUTPUT.PUT_LINE('Stock del producto: ' || stockProducto);
+      DBMS_OUTPUT.PUT_LINE('======>FIN FUNCIÓN: OBTENER_STOCK');
+      DBMS_OUTPUT.NEW_LINE;
+   EXCEPTION
+      WHEN OTHERS THEN
+         DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+         DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+         DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SQLERRM);
+   END;
 
-    -- 5. Borrar un proveedor y los items asociados a ese proveedor.
-    BorrarProveedor(v_codigo_proveedor);
+   BEGIN
+      -- 4. Procedimiento para actualizar el stock de un producto.
+      DBMS_OUTPUT.PUT_LINE('======>INICIO PROCEDIMIENTO: ACTUALIZAR_STOCK');
+      ACTUALIZAR_STOCK(1, 5); -- Supongamos que el p_codigo_item es 1 y p_cantidad es 5
+      DBMS_OUTPUT.PUT_LINE('======>FIN PROCEDIMIENTO: ACTUALIZAR_STOCK');
+      DBMS_OUTPUT.NEW_LINE;
+   EXCEPTION
+      WHEN OTHERS THEN
+         DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+         DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+         DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SQLERRM);
+   END;
 
-    -- 6. Mostrar los items de una linea de venta
-    MostrarItemsLineaVenta(v_codigo_venta);
+   BEGIN
+      -- 5. Borrar un proveedor y los items asociados a ese proveedor.
+      DBMS_OUTPUT.PUT_LINE('======>INICIO PROCEDIMIENTO: BorrarProveedor');
+      BorrarProveedor(1); -- Supongamos que el codigoProveedor es 1
+      DBMS_OUTPUT.PUT_LINE('======>FIN PROCEDIMIENTO: BorrarProveedor');
+      DBMS_OUTPUT.NEW_LINE;
+   EXCEPTION
+      WHEN OTHERS THEN
+         DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+         DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+         DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SQLERRM);
+   END;
+
+   BEGIN
+      -- 6. Mostrar los items de una línea de venta.
+      DBMS_OUTPUT.PUT_LINE('======>INICIO PROCEDIMIENTO: MostrarItemsLineaVenta');
+      MostrarItemsLineaVenta(1); -- Supongamos que el codigoVenta es 1
+      DBMS_OUTPUT.PUT_LINE('======>FIN PROCEDIMIENTO: MostrarItemsLineaVenta');
+      DBMS_OUTPUT.NEW_LINE;
+   EXCEPTION
+      WHEN OTHERS THEN
+         DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+         DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+         DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SQLERRM);
+   END;
 
 EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Error en el bloque principal: ' || SQLERRM);
+   WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN NO TRATADA EN EL BLOQUE PRINCIPAL]');
+      DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+      DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SQLERRM);
 END;
 /
