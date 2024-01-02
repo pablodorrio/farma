@@ -954,3 +954,91 @@ EXCEPTION
       DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SQLERRM);
 END;
 /
+
+-- ###########################################################
+-- 10. Bloque para prueba de Triggers ########################
+-- ###########################################################
+-- Trigger 1: actualizar_stock_venta
+SET SERVEROUTPUT ON
+BEGIN
+   DBMS_OUTPUT.NEW_LINE;
+
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER actualizar_stock_venta (ANTES)');
+   INSERT INTO LINEA_VENTA (CODIGO_VENTA, COD_ITEM, CANTIDAD) VALUES (1, 'A1', 2);
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER actualizar_stock_venta (DESPU…S)');
+
+EXCEPTION
+   WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+      DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+      DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SUBSTR(SQLERRM, 11, 100));
+END;
+/
+
+-- Trigger 2: actualizar_supervisor
+SET SERVEROUTPUT ON
+BEGIN
+   DBMS_OUTPUT.NEW_LINE;
+
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER actualizar_supervisor (ANTES)');
+   UPDATE PERSONAL SET CODIGO_EMP = 'B2' WHERE CODIGO_EMP = 'A1';
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER actualizar_supervisor (DESPU…S)');
+
+EXCEPTION
+   WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+      DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+      DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SUBSTR(SQLERRM, 11, 100));
+END;
+/
+
+-- Trigger 3: aplicar_descuento_cliente_vip
+SET SERVEROUTPUT ON
+BEGIN
+   DBMS_OUTPUT.NEW_LINE;
+
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER aplicar_descuento_cliente_vip (ANTES)');
+   INSERT INTO VENTA (CODIGO_VENTA, DNI, PRECIO_TOTAL) VALUES (2, '12345678X', 1000);
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER aplicar_descuento_cliente_vip (DESPU…S)');
+
+EXCEPTION
+   WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+      DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+      DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SUBSTR(SQLERRM, 11, 100));
+END;
+/
+
+-- Trigger 4: verificar_stock_before_venta
+SET SERVEROUTPUT ON
+BEGIN
+   DBMS_OUTPUT.NEW_LINE;
+
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER verificar_stock_before_venta (ANTES)');
+   INSERT INTO LINEA_VENTA (CODIGO_VENTA, COD_ITEM, CANTIDAD) VALUES (3, 'A1', 1000);
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER verificar_stock_before_venta (DESPU…S)');
+
+EXCEPTION
+   WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+      DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+      DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SUBSTR(SQLERRM, 11, 100));
+END;
+/
+
+-- Trigger 5: actualizar_puntos_venta
+SET SERVEROUTPUT ON
+BEGIN
+   DBMS_OUTPUT.NEW_LINE;
+
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER actualizar_puntos_venta (ANTES)');
+   INSERT INTO VENTA (CODIGO_VENTA, DNI, PRECIO_TOTAL) VALUES (4, '12345678X', 500);
+   DBMS_OUTPUT.PUT_LINE('======>PRUEBA DEL TRIGGER actualizar_puntos_venta (DESPU…S)');
+
+EXCEPTION
+   WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('[EXCEPCIÓN]');
+      DBMS_OUTPUT.PUT_LINE('[Código]: ' || SQLCODE);
+      DBMS_OUTPUT.PUT_LINE('[Mensaje]: ' || SUBSTR(SQLERRM, 11, 100));
+END;
+/
